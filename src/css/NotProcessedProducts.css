@@ -1,0 +1,276 @@
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 18%;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-right: 1px solid #e5e5e5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar-list {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-icon {
+    width: 24px;
+    margin-right: 10px;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    color: #888;
+    margin-top: 10px;
+}
+
+.sidebar-item.active {
+    color: #303972;
+}
+
+.sidebar-item.active i {
+    color: white;
+}
+
+.not-processed {
+    opacity: 60%;
+}
+
+.pagination-settings {
+    margin-top: auto;
+    color: #303972;
+    font-weight: bold;
+}
+
+.pagination-options button {
+    margin: 0 5px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #eee;
+
+    width: 50px;
+    height: 50px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.pagination-options button.active {
+    background: #4D44B5;
+    color: #fff;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-title {
+    margin-top: 3%;
+    font-size: 36px;
+    font-weight: bold;
+    color: #303972; /* Dark blue color */
+}
+
+.header-search {
+    flex: 1;
+    margin: 0 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.search-button {
+    display: flex;
+    justify-content: space-between;
+}
+
+.search-bar {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 10px 15px;
+    align-items: center;
+    gap: 15px;
+    width: 50%;
+    max-width: 800px;
+}
+
+.search-bar i {
+    color: #aaa;
+    font-size: 16px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    padding-left: 20px;
+    color: #131313;
+    background: transparent;
+
+}
+
+.search-bar input::placeholder {
+    color: #aaa;
+}
+
+.header-user {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2d3a85; /* Same blue as the title */
+}
+
+.user-name {
+    margin-left: auto;
+    font-size: 25px;
+
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination button {
+    font-weight: bold;
+    font-size: 13px;
+    margin: 0 5px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #eee;
+    width: 35px;
+    height: 35px;
+}
+
+.pagination button.active {
+    background-color: #4D44B5;
+    color: white;
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 97%;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.content-table {
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.content-table th {
+    font-weight: bold;
+    color: #2d3a85;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 12px 8px;
+}
+
+.content-table td {
+    padding: 40px 8px;
+}
+
+.content-table .clickable-row {
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: 1.2;
+}
+
+.content-table img {
+    padding: 40px 8px;
+    height: 100px;
+}
+
+.content-table .clickable-row:hover {
+    background-color: #F2F2F2;
+}
+
+
+.content-table input[type="checkbox"] {
+    margin-right: 40px;
+    margin-left: -50px;
+    transform: scale(1.8);
+    vertical-align: middle;
+    accent-color: #4D44B5;
+    margin-bottom: 6px;
+}
+
+.column-article {
+    font-weight: bold;
+    text-indent: 60px;
+}
+
+.column-img {
+    padding-left: 20px;
+    width: 20%;
+    color: #303972;
+}
+
+.column-name {
+    width: 70%;
+    color: #303972;
+}
+
+.product {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.product-count {
+    margin-left: 20px;
+    color: #4a4a4a;
+    opacity: 70%;
+}
+
+.action-button {
+    padding: 10px 20px;
+    background-color: #5c67e8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    transition: background-color 0.3s;
+    min-width: 250px;
+    font-weight: bold;
+}
+
+.action-button:hover {
+    background-color: #4a55c7;
+}
+
+.column-supplier-name {
+    font-weight: bold;
+    text-indent: 60px;
+}
