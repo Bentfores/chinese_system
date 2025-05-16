@@ -7,7 +7,7 @@ function BlackList() {
 
     return (
         <div className="app-container">
-            <SideBar onCategoryChange={setSelectedCategory}/>
+            <SideBar selectedCategory={selectedCategory}/>
             <SupplierTable selectedCategory={selectedCategory}/>
         </div>
     );

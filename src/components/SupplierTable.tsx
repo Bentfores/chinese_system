@@ -1,44 +1,58 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import search from "../images/search.png";
 import "../css/ProductDetails.css";
-
-interface Supplier {
-    id: number;
-    name: string;
-    comment: string;
-}
-
-const mockData: Supplier[] = [
-    { id: 1, name: "Huai'an One Pet Products Co., Ltd.", comment: "Поставщик не отправил товар в течение 2 месяцев" },
-    { id: 2, name: "Henan Kangdar Pet Products Co., Ltd.", comment: "Перестал отвечать на сообщения" },
-    { id: 3, name: "Yiwu Sanan Pet Products Co., Ltd.", comment: "Очень очень очень очень очень очень длинный текст длинный текст длинный текст" },
-    { id: 4, name: "Guangzhou Aodu Trading Co., Ltd.", comment: "Комментарий" },
-    { id: 5, name: "Shanghai Meow Pet Supplies Co., Ltd.", comment: "Отправка задержана из-за отсутствия документов" },
-    { id: 6, name: "Chengdu Pets Paradise Co., Ltd.", comment: "Перестал отвечать после первого заказа" },
-    { id: 7, name: "Zhejiang Happy Pets Co., Ltd.", comment: "Отправил поврежденный товар" },
-    { id: 8, name: "Fujian Comfort Pet Products Co., Ltd.", comment: "Длительное время ответа на запросы" },
-    { id: 9, name: "Shenzhen Pet World Trading Co., Ltd.", comment: "Успешное сотрудничество, но высокие цены" },
-    { id: 10, name: "Guangdong Furry Friends Supplies Co., Ltd.", comment: "Хорошая упаковка, но длительная доставка" }
-];
+import {changeSuppliersStatus, getSuppliers} from "../api/ApiManagement";
 
 const SupplierTable: React.FC<{ selectedCategory: string }> = ({selectedCategory}) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedCheckboxes, setSelectedCheckboxes] = useState<number[]>([]);
+    const [selectedCheckboxes, setSelectedCheckboxes] = useState<string[]>([]);
+    const [suppliers, setSuppliers] = useState<blackListSupplier[]>([])
+    const [searchText, setSearchText] = useState("");
     const itemsPerPage = 10;
+
+    useEffect(() => {
+        fetchBlackSuppliers()
+    }, []);
+
+    const fetchBlackSuppliers = (): void => {
+        getSuppliers(["BLACKLISTED"])
+            .then((response) => {
+                setSuppliers(response.data)
+            })
+            .catch((err: Error) => alert(err))
+    }
+
+    const sendToNotCooperating = async () => {
+        changeSuppliersStatus(selectedCheckboxes, "NOT_COOPERATING", null, null)
+            .then(({status}) => {
+                if (status !== 200) {
+                    throw new Error("Error! Suppliers not sent to NOT_COOPERATING")
+                }
+                fetchBlackSuppliers()
+            })
+            .catch(err => alert(err))
+    };
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
 
-    const handleCheckboxChange = (id: number) => {
+    const handleCheckboxChange = (id: string) => {
         setSelectedCheckboxes((prev) =>
             prev.includes(id)
-                ? prev.filter((item) => item !== id) // Remove if already selected
-                : [...prev, id] // Add if not selected
+                ? prev.filter((item) => item !== id)
+                : [...prev, id]
         );
     };
 
-    const currentData = mockData.slice(
+    const filteredSuppliers = suppliers.filter((supplier) =>
+        supplier.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        supplier.comment.toLowerCase().includes(searchText.toLowerCase())
+    );
+
+    const totalPages = Math.ceil(filteredSuppliers.length / itemsPerPage);
+
+    const currentData = filteredSuppliers.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
@@ -46,7 +60,7 @@ const SupplierTable: React.FC<{ selectedCategory: string }> = ({selectedCategory
     return (
         <main className="main-content">
             <header className="header">
-                <h1 className="header-title">Товары</h1>
+                <h1 className="header-title">Поставщики</h1>
                 <div className="header-user">
                     <span className="user-name">Irina G</span>
                 </div>
@@ -54,61 +68,72 @@ const SupplierTable: React.FC<{ selectedCategory: string }> = ({selectedCategory
             <div className="search-button">
                 <div className="search-bar">
                     <img src={search} alt="Clock Icon" className="sidebar-icon not-processed"/>
-                    <input type="text" placeholder="Поиск"/>
+                    <input
+                        type="text"
+                        placeholder="Поиск"
+                        value={searchText}
+                        onChange={(e) => {
+                            setSearchText(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                    />
                 </div>
                 {selectedCheckboxes.length > 0 && (
-                    <button className="action-button">Восстановить</button>
+                    <button className="action-button" onClick={sendToNotCooperating}>Восстановить</button>
                 )}
             </div>
             <div className="container">
                 <table className="content-table">
-                    <thead>
-                    <tr>
-                        <th className="column-supplier-name">Наименование</th>
-                        <th className="column-supplier-comment">Комментарий</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {currentData.map((product) => (
-                        <tr key={product.id}>
-                            <td className="column-supplier-name">
-                                <input
-                                    type="checkbox"
-                                    onChange={() => handleCheckboxChange(product.id)}
-                                    checked={selectedCheckboxes.includes(product.id)}
-                                />
-                                {product.name}
-                            </td>
-                            <td className="column-supplier-comment">{product.name}</td>
+                    {currentData.length > 0 && (
+                        <thead>
+                        <tr>
+                            <th className="column-supplier-name">Наименование</th>
+                            <th className="column-supplier-comment">Комментарий</th>
                         </tr>
-                    ))}
+                        </thead>
+                    )}
+                    <tbody>
+                    {currentData.length > 0 ? (
+                        currentData.map((supplier) => (
+                            <tr key={supplier.supplierId}>
+                                <td className="column-supplier-name">
+                                    <input
+                                        type="checkbox"
+                                        onChange={() => handleCheckboxChange(supplier.supplierId)}
+                                        checked={selectedCheckboxes.includes(supplier.supplierId)}
+                                    />
+                                    {supplier.name}
+                                </td>
+                                <td className="column-supplier-comment">{supplier.comment}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan={2} style={{textAlign: "center", padding: "20px", color: "#999"}}>
+                                Нет поставщиков
+                            </td>
+                        </tr>
+                    )}
                     </tbody>
                 </table>
-                <div className="product">
-                    <div className="product-count">
-                        Показано {currentData.length} из {mockData.length} товаров
+                {filteredSuppliers.length > 0 && (
+                    <div className="product">
+                        <div className="product-count">
+                            Показано {currentData.length} из {suppliers.length} поставщиков
+                        </div>
+                        <div className="pagination">
+                            {Array.from({length: totalPages}, (_, index) => (
+                                <button
+                                    key={index + 1}
+                                    onClick={() => handlePageChange(index + 1)}
+                                    className={currentPage === index + 1 ? "active" : ""}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                    <div className="pagination">
-                        <button
-                            onClick={() => handlePageChange(1)}
-                            className={currentPage === 1 ? "active" : ""}
-                        >
-                            1
-                        </button>
-                        <button
-                            onClick={() => handlePageChange(2)}
-                            className={currentPage === 2 ? "active" : ""}
-                        >
-                            2
-                        </button>
-                        <button
-                            onClick={() => handlePageChange(3)}
-                            className={currentPage === 3 ? "active" : ""}
-                        >
-                            3
-                        </button>
-                    </div>
-                </div>
+                )}
             </div>
         </main>
     );

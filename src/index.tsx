@@ -5,16 +5,17 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import keycloak from "./Keycloak";
 import {ReactKeycloakProvider} from "@react-keycloak/web";
+import {HelmetProvider} from "react-helmet-async";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
-    //<React.StrictMode>
-        <ReactKeycloakProvider authClient={keycloak}>
+    <React.StrictMode>
+        <HelmetProvider>
             <App/>
-        </ReactKeycloakProvider>
-    //</React.StrictMode>
+        </HelmetProvider>
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

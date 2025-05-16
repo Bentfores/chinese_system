@@ -4,11 +4,11 @@ import ProductTable from "../components/ProductTable";
 import "../css/NotProcessedProducts.css";
 
 function ProcessedProducts() {
-    const [selectedCategory, setSelectedCategory] = useState("processed");
+    const [selectedCategory, setSelectedCategory] = useState("PROCESSED");
 
     return (
         <div className="app-container">
-            <SideBar onCategoryChange={setSelectedCategory}/>
+            <SideBar selectedCategory={selectedCategory}/>
             <ProductTable selectedCategory={selectedCategory}/>
         </div>
     );

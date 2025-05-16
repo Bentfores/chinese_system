@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { authorizeUser } from "../api/ApiUser";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import "../css/Login.css";
 import user from "../images/user.png";
 import padlock from "../images/padlock.png";
 import CryptoJS from "crypto-js";
+import {authorizeUser} from "../api/ApiUser";
 
 const hashPassword = (password: string): string => {
     return CryptoJS.SHA256(password).toString();
@@ -16,10 +16,15 @@ const LoginPage = () => {
     const [errorMessage, setErrorMessage] = useState<string>("");
     const navigate = useNavigate();
 
+    useEffect(() => {
+    }, []);
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const hashedPassword = hashPassword(password);
+
+        navigate("/not_processed")
 
         authorizeUser(username, hashedPassword)
             .then(({status, data}) => {
@@ -42,7 +47,7 @@ const LoginPage = () => {
                 <form className="login-form" onSubmit={handleLogin}>
                     <div className="input-group">
                         <div className="input-wrapper">
-                            <img src={user} alt="User Icon" className="input-icon" />
+                            <img src={user} alt="User Icon" className="input-icon"/>
                             <input
                                 type="text"
                                 placeholder="ПОЛЬЗОВАТЕЛЬ"
@@ -54,7 +59,7 @@ const LoginPage = () => {
                     </div>
                     <div className="input-group">
                         <div className="input-wrapper">
-                            <img src={padlock} alt="User Icon" className="input-icon padlock" />
+                            <img src={padlock} alt="User Icon" className="input-icon padlock"/>
                             <input
                                 type="password"
                                 placeholder="ПАРОЛЬ"
